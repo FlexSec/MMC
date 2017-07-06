@@ -96,7 +96,7 @@ void EasterJump()
 	{
 		
 		Mem = new MMC();
-			std::cout << "TBOT" << std::endl;
+			std::cout << "OrkoV1" << std::endl;
 			Trigger();
 			EasterJump();
 			delete Mem; 
