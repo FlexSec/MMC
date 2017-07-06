@@ -23,7 +23,7 @@ public:
 	{
 		HANDLE hPID = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
 		PROCESSENTRY32 procEntry;
-		procEntry.dwsize = sizeof(procEntry);
+		procEntry.dwSize = sizeof(procEntry);
 
 		const WCHAR* procNameChar;
 		int nChars = MultiByteToWideChar(CP_ACP, 0, ProcessName, -1, NULL, 0);
@@ -76,7 +76,7 @@ public:
 	}
 
 	template<class c>
-	BOOL Write(DWORD, dwAddress, c, ValueToWrite)
+	BOOL Write(DWORD dwAddress, c, ValueToWrite)
 	{
 		return WriteProcessMemory(hProcess, (LPVOID)dwAddress, &ValueToWrite, sizeof(c) NULL);
 	}
