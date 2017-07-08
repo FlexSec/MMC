@@ -76,13 +76,15 @@ public:
 	}
 
 	template<class c>
-	BOOL Write(DWORD dwAddress, c, ValueToWrite)
+	BOOL Write(DWORD dwAddress, c ValueToWrite)
 	{
-		return WriteProcessMemory(hProcess, (LPVOID)dwAddress, &ValueToWrite, sizeof(c) NULL);
+		return WriteProcessMemory(hProcess, (LPVOID)dwAddress, &ValueToWrite, sizeof(c), NULL);
+		
 	}
 
 	DWORD GetProcID() { return this->dwPID; }
 	HANDLE GetProcHandle() { return this->hProcess; }
+
 
 	MMC()
 	{

@@ -10,7 +10,7 @@
 MMC* Mem;
 
 bool TriggerOn = false;
-bool HopOn = false;
+bool HopOn = true;
 
 void Trigger()
 {
@@ -38,11 +38,18 @@ void Trigger()
 
 		if ((LocalPlayer_inCross > 0 && LocalPlayer_inCross <= 64) && (Trigger_EntityBase != NULL) && (Trigger_EntityTeam != LocalPlayer_Team) && (!Trigger_EntityDormant))
 		{
-			Sleep(10); //Delay before shooting
+			// Alternative Function
+			/*Sleep(10); //Delay before shooting
 			mouse_event(MOUSEEVENTF_LEFTDOWN, NULL, NULL, NULL, NULL);
 			Sleep(10); //Delay between shots
 			mouse_event(MOUSEEVENTF_LEFTUP, NULL, NULL, NULL, NULL);
-			Sleep(10); //Delay after shooting
+			Sleep(10); //Delay after shooting */
+
+			Sleep(10); 
+			Mem->Write<int>(Mem->ClientDLL_Base + m_dwForceAttack, 5);
+			Sleep(10); 
+			Mem->Write<int>(Mem->ClientDLL_Base + m_dwForceAttack, 4);
+			Sleep(10); 
 		}
 	}
 }
@@ -66,19 +73,20 @@ void EasterJump()
 		int flags = Mem->Read<DWORD>(LocalPlayer_Base + m_fFlags); 
 
 		if (m_fFlags & m_FL_ONGROUND && GetAsyncKeyState(VK_SHIFT)) {
-			Mem->Write<DWORD>(Mem->ClientDLL_Base, m_dwForceJump, 6);
+			Mem->Write<int>(Mem->ClientDLL_Base +m_dwForceJump, 6);
 		}
 	}
-}
+} 
 
 	int main()
 	{
 		
 		Mem = new MMC();
 			std::cout << "OrkoV1" << std::endl;
-			Trigger();
+			//Trigger();
 			EasterJump();
 			delete Mem; 
 			return 0;
 		
 	};
+
