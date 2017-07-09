@@ -2,13 +2,14 @@
 #include <Windows.h>
 #include <TlHelp32.h>
 
-class MMC
+class MMC()
 {
 private:
-	
+
 	DWORD dwPID;
 	HANDLE hProcess;
-	
+	static bool CompareData(const unsigned char* pbData, const unsigned char* pbMask, const char* pszString);
+	static DWORD FindPattern(DWORD start, DWORD size, const char* sig, const char* mask);
 
 
 public:
@@ -16,7 +17,7 @@ public:
 	MODULEENTRY32 EngineDLL;
 	DWORD ClientDLL_Base, ClientDLL_size;
 	DWORD EngineDLL_Base, EngineDLL_size;
-	
+
 
 
 	bool Attach(char* ProcessName)
@@ -42,7 +43,7 @@ public:
 
 		CloseHandle(hPID);
 		return false;
-}
+	}
 
 	MODULEENTRY32 GetModule(char* ModuleName)
 	{
@@ -65,7 +66,7 @@ public:
 		CloseHandle(hModule);
 		mENTRY.modBaseAddr = 0x0;
 		return mENTRY;
-}
+	}
 
 	template<class c>
 	c Read(DWORD dwAddress)
@@ -79,7 +80,7 @@ public:
 	BOOL Write(DWORD dwAddress, c ValueToWrite)
 	{
 		return WriteProcessMemory(hProcess, (LPVOID)dwAddress, &ValueToWrite, sizeof(c), NULL);
-		
+
 	}
 
 	DWORD GetProcID() { return this->dwPID; }
@@ -91,7 +92,7 @@ public:
 		this->hProcess = NULL;
 		this->dwPID = NULL;
 		try {
-			if (!Attach("csgo.exe")) throw 1;
+			if (!Attach("ntoskrnl.exe")) throw 1;
 			this->ClientDLL = GetModule("client.dll");
 			this->EngineDLL = GetModule("engine.dll");
 			this->ClientDLL_Base = (DWORD)this->ClientDLL.modBaseAddr;
@@ -104,7 +105,7 @@ public:
 		catch (int iEx) {
 			switch (iEx)
 			{
-			case 1: MessageBoxA(NULL, "CS:GO must be running", "ERROR", MB_ICONSTOP | MB_OK); exit(0); break;
+			case 1: MessageBoxA(NULL, "Process must be running", "ERROR", MB_ICONSTOP | MB_OK); exit(0); break;
 			case 2: MessageBoxA(NULL, "Couldn't find Client.dll", "ERROR", MB_ICONSTOP | MB_OK); exit(0); break;
 			case 3: MessageBoxA(NULL, "Couldn't find Engine.dll", "ERROR", MB_ICONSTOP | MB_OK); exit(0); break;
 			default: throw;
@@ -123,3 +124,4 @@ public:
 
 
 };
+
